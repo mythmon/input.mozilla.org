@@ -78,7 +78,7 @@
       </div>
 
       {% if type != 'idea' %}
-      <div class="alt-idea">
+      <div class="alt-idea{% if locale in settings.RTL_LANGUAGES %} alt-idea-rtl{% endif %}">
         <em></em>
         <span>
           {{ _('If you have an idea to offer us instead, please use our') }}

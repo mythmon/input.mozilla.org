@@ -93,7 +93,7 @@ def feedback(request, ua):
 
     template = 'feedback/%sindex.html' % (
         'mobile/' if request.mobile_site else '')
-    return render(request, template, {'forms': forms})
+    return render(request, template, {'forms': forms, 'locale': request.locale})
 
 
 @cache_page

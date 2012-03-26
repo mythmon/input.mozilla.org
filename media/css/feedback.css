@@ -708,7 +708,9 @@ footer form option {
     top: 0;
     bottom: 0;
 }
-
+.alt-idea-rtl {
+    right: 400px;
+}
 #happy {
 }
 #happy header {
