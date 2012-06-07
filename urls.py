@@ -4,7 +4,10 @@ from django.contrib import admin
 from django.shortcuts import redirect
 
 import jingo
+import sphinxapi
 from django_arecibo.tasks import post as arecibo_post
+
+sphinxapi.TIMEOUT = getattr(settings, 'SPHINX_TIMEOUT', 1)
 
 
 def _error_page(request, status):
@@ -14,6 +17,7 @@ def _error_page(request, status):
 
 handler404 = lambda r: _error_page(r, 404)
 handler_csrf = lambda r, reason: jingo.render(r, 'csrf_error.html')
+
 
 def handler500(request):
     arecibo = getattr(settings, 'ARECIBO_SERVER_URL', '')
