@@ -31,14 +31,14 @@ cd /data/input;
 /usr/bin/rsync -aq --exclude '.git*' --delete /data/input/python/ /data/input/www/django
 
 cd $SYNC_DIR
-schematic migrations
+/usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations
 
 # Pull in highcharts.src.js - our lawyers make us do this.
 /usr/bin/python26 $INPUT_DIR/manage.py cron get_highcharts
 /usr/bin/python26 $INPUT_DIR/manage.py compress_assets
 
 if [ -d $SYNC_DIR/migrations/sites ]; then
-   schematic migrations/sites
+  /usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations/sites
 fi
 
 # Clustering commented out because it takes too long during release.
