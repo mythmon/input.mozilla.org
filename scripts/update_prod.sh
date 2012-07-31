@@ -31,15 +31,17 @@ cd /data/input;
 /usr/bin/rsync -aq --exclude '.git*' --delete /data/input/python/ /data/input/www/django
 
 cd $SYNC_DIR
-/usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations
+# FIXME: Commenting this out because it's not working.
+# /usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations
 
 # Pull in highcharts.src.js - our lawyers make us do this.
 /usr/bin/python26 $INPUT_DIR/manage.py cron get_highcharts
 /usr/bin/python26 $INPUT_DIR/manage.py compress_assets
 
-if [ -d $SYNC_DIR/migrations/sites ]; then
-  /usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations/sites
-fi
+# FIXME: Commenting this out because it's not working.
+# if [ -d $SYNC_DIR/migrations/sites ]; then
+#   /usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations/sites
+# fi
 
 # Clustering commented out because it takes too long during release.
 # If urgent, start by hand (in a screen). If not urgent, wait until clustering
