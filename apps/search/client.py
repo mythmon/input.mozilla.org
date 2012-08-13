@@ -22,6 +22,11 @@ from feedback.models import Opinion
 import sphinxapi as sphinx
 
 
+# Monkey-patch sphinx socket timeout. Default to 5s (instead of 1s)
+# but allow it to be overridden by SPHINX_TIMEOUT setting in settings.
+sphinx.K_TIMEOUT = getattr(settings, 'SPHINX_TIMEOUT', 5)
+
+
 SPHINX_HARD_LIMIT = 1000  # A hard limit that sphinx imposes.
 
 
