@@ -24,7 +24,10 @@ git submodule update --init --recursive
 echo -e "Updating reporter..."
 cd $INPUT_DIR
 git fetch origin
-git checkout origin/prod
+
+# Note: We're deploying from the master branch now to shave off some
+# workflow steps because this is a dead project. (willkg)
+git checkout origin/master
 git submodule update --init
 
 cd /data/input;
