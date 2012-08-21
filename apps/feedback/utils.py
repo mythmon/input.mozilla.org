@@ -33,18 +33,15 @@ def ua_parse(ua):
     for browser in BROWSERS:
         match = re.match(browser[1], ua)
         if match:
+            detected['browser'] = browser[0]
             try:
                 version = Version(match.group(2))
+                detected['version'] = str(version)
             except:
-                # Unable to parse version? No dice.
-                return None
-            detected = {
-                'browser': browser[0],
-                'version': str(version),
-            }
-            break
+                # Can't parse version? Try more.
+                pass
     # Browser not recognized? Bail.
-    if not detected:
+    if 'browser' not in detected or 'version' not in detected:
         return None
 
     # Detect Platform
