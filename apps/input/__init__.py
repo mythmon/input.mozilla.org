@@ -125,13 +125,13 @@ PRODUCT_IDS = dict((prod.id, prod) for prod in _prods)
 UA_PATTERN_FIREFOX = (
     r'^Mozilla.*(Firefox|Minefield|Namoroka|Shiretoko|GranParadiso|BonEcho|'
     'Iceweasel|Fennec|MozillaDeveloperPreview)\/([^\s]*).*$')
-UA_PATTERN_MOBILE = r'^Mozilla.*(Fennec)\/([^\s]*)$'
+UA_PATTERN_MOBILE = r'^Mozilla.*(Fennec|Mobile|Tablet)'
 
 # Order is important: Since Fennec is Firefox too, it'll match the second
 # pattern as well, so we must detect it first.
 BROWSERS = (
-    (MOBILE, UA_PATTERN_MOBILE),
     (FIREFOX, UA_PATTERN_FIREFOX),
+    (MOBILE, UA_PATTERN_MOBILE),
 )
 
 key = 'LATEST_FIREFOX_RELEASED_DEVEL_VERSION'
