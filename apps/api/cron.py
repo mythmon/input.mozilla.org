@@ -2,6 +2,7 @@ import bz2
 import csv
 import os.path
 import shutil
+import logging
 from time import mktime
 
 from django.conf import settings
@@ -39,8 +40,6 @@ def _split_queryset(qs):
     start = 0
     end = BUCKET_SIZE
     while True:
-        print start
-
         split = qs[start:end]
         if split:
             yield split
@@ -59,7 +58,7 @@ def export_tsv():
     """
     opinions_path = os.path.join(settings.TSV_EXPORT_DIR, 'opinions.tsv.bz2')
     opinions_tmp = '%s_exporting' % opinions_path
-    print 'Dumping all opinions into TSV file %s.' % opinions_path
+    log.info('Dumping all opinions into TSV file %s.', opinions_path)
 
     opinions = Opinion.objects.order_by('id')
     try:
@@ -87,4 +86,4 @@ def export_tsv():
     finally:
         outfile.close()
     shutil.move(opinions_tmp, opinions_path)
-    print 'All opinions dumped to disk.'
+    log.info('All opinions dumped to disk.')

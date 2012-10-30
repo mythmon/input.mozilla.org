@@ -61,7 +61,7 @@ def test_ua_parse():
          'Browser-Anonymisierer 48771657', None),  # bug 629687
     )
 
-    for pattern in patterns:
+    def test_ua_item(pattern):
         parsed = ua_parse(pattern[0])
         if pattern[1]:
             eq_(parsed['browser'], pattern[1])
@@ -70,19 +70,24 @@ def test_ua_parse():
         else:
             assert parsed is None
 
+    for pattern in patterns:
+        yield test_ua_item, pattern
+
+
 def test_detect_language():
     """Check Accept-Language matching for feedback submission."""
     patterns = (
         ('en-us,en;q=0.7,de;q=0.8', 'en-US'),
         ('fr-FR,de-DE;q=0.5', 'fr'),
         ('zh, en-us;q=0.8, en;q=0.6', 'en-US'),
-        ('German', ''), # invalid
+        ('German', ''),  # invalid
     )
 
     for pattern in patterns:
         req = http.HttpRequest()
         req.META['HTTP_ACCEPT_LANGUAGE'] = pattern[0]
         eq_(detect_language(req), pattern[1])
+
 
 def test_smart_truncate():
     """Test text truncation on word boundaries."""
