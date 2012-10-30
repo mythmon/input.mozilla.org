@@ -200,6 +200,17 @@ class LINUX:
     prods = set((FIREFOX,))
 
 
+class FIREFOXOS:
+    # Firefox OS has a user agent like Firefox for Android, minus the word
+    # 'Android'. In other words, it does not list itself as having any
+    # platform. The hard part about this is that this basically a fallback,
+    # and needs to be placed at the end of any detection loop.
+    pretty = _(u'Firefox OS')
+    short = 'fxos'
+    ua_pattern = 'Mobile'
+    prods = set((FIREFOX,))
+
+
 class PLATFORM_OTHER:
     pretty = _(u'Other')
     short = 'other'
@@ -207,6 +218,6 @@ class PLATFORM_OTHER:
     prods = set((FIREFOX, MOBILE))
 
 PLATFORM_USAGE = _platforms = (WINDOWS_XP, WINDOWS_VISTA, WINDOWS_7, OSX,
-                               MAEMO, ANDROID, LINUX)
+                               MAEMO, ANDROID, LINUX, FIREFOXOS)
 PLATFORM_PATTERNS = [(p.ua_pattern, p.short) for p in PLATFORM_USAGE]
 PLATFORMS = dict((platform.short, platform) for platform in _platforms)

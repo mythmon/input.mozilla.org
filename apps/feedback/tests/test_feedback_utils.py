@@ -43,6 +43,14 @@ def test_ua_parse():
          '20100924 Namoroka/4.0b7pre Fennec/2.0b1pre',
          MOBILE, '2.0b1pre', 'android'),
 
+        # Valid modern Firefox for Android
+        ('Mozilla/5.0 (Android; Mobile; rv:18.0) Gecko/18.0 Firefox/18.0',
+         MOBILE, '18.0', 'android'),
+
+        # valid Firefox OS
+        ('Mozilla/5.0 (Mobile; rv:19.0) Gecko/19.0 Firefox/19.0',
+         MOBILE, '19.0', 'fxos'),
+
         # invalid
         ('A completely bogus Firefox user agent string.', None),
         ('Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_3; en-us) '

@@ -13,7 +13,7 @@ from view_cache_utils import cache_page_with_prefix
 # Known mobile device patterns. Excludes iPad because it's big enough to show
 # the desktop dashboard.
 MOBILE_DEVICE_PATTERN = re.compile(
-    r'^Mozilla.*(Fennec|Android|Maemo|iPhone|iPod)')
+    r'^Mozilla.*(Fennec|Android|Maemo|iPhone|iPod|Mobile)', re.IGNORECASE)
 
 
 def cache_page(cache_timeout=None, use_get=False, **kwargs):
