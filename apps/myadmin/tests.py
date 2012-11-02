@@ -17,28 +17,21 @@ class ViewTestCase(test_utils.TestCase):
         assert self.client.login(username='a', password='b')
 
     def test_export_tsv(self):
-        r = self.client.get(reverse('myadmin.export_tsv'))
+        r = self.client.get(reverse('admin:myadmin.export_tsv'))
         eq_(r.status_code, 200)
 
     def test_export_tsv_post(self):
-        r = self.client.post(reverse('myadmin.export_tsv'))
+        r = self.client.post(reverse('admin:myadmin.export_tsv'))
         eq_(r.status_code, 200)
 
-    def test_logged_out(self):
-        self.client.logout()
-        r = self.client.get(reverse('myadmin.settings'))
-        eq_(r.status_code, 302)
-        expect = reverse('login') + '?next=' + reverse('myadmin.settings')
-        assert r['Location'].endswith(expect)
-
     def test_recluster(self):
-        r = self.client.get(reverse('myadmin.recluster'))
+        r = self.client.get(reverse('admin:myadmin.recluster'))
         eq_(r.status_code, 200)
 
     def test_recluster_post(self):
-        r = self.client.post(reverse('myadmin.recluster'))
+        r = self.client.post(reverse('admin:myadmin.recluster'))
         eq_(r.status_code, 302)
 
     def test_settings(self):
-        r = self.client.get(reverse('myadmin.settings'))
+        r = self.client.get(reverse('admin:myadmin.settings'))
         eq_(r.status_code, 200)

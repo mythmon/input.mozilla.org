@@ -1,10 +1,24 @@
+from funfactory import monkeypatches
+monkeypatches.patch()
+
 from django.conf.urls.defaults import url, patterns, include
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.shortcuts import redirect
 
 import jingo
+
 from django_arecibo.tasks import post as arecibo_post
+
+from myadmin import MyAdminSite
+
+# Monkey patch both the Session CSRF and AdminPlus admin sites.
+admin.site = MyAdminSite()
+admin.autodiscover()
+
+import myadmin.views
+
 
 def _error_page(request, status):
     """Render error pages with jinja2."""
@@ -24,9 +38,6 @@ def handler500(request):
     return _error_page(request, 500)
 
 
-admin.autodiscover()
-
-
 def unchannel(request):
     url = request.META['PATH_INFO']
     url = url.replace('beta/', '', 1).replace('release/', '', 1)
@@ -41,7 +52,7 @@ urlpatterns = patterns('',
     ('', include('search.urls')),
     ('', include('themes.urls')),
 
-    (r'^admin/', include('myadmin.urls')),
+    (r'^admin/', include(admin.site.urls)),
 
     url(r'^about/?$', jingo.render, {'template': 'about.html'},
         name='about'),
@@ -51,9 +62,13 @@ urlpatterns = patterns('',
 )
 
 if settings.DEBUG:
+    # Media files
     # Remove leading and trailing slashes so the regex matches.
     media_url = settings.MEDIA_URL.strip('/')
     urlpatterns += patterns('',
         (r'^%s/(?P<path>.*)$' % media_url, 'django.views.static.serve',
          {'document_root': settings.MEDIA_ROOT}),
     )
+
+    # Static files.
+    urlpatterns += staticfiles_urlpatterns()

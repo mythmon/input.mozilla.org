@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Count, signals
 
 import caching.base
-import commonware
+import commonware.log
 from elasticutils import es_required
 from pyes import djangoutils
 from pyes.exceptions import NotFoundException as PyesNotFoundException

@@ -34,7 +34,7 @@ LANGUAGE_URL_MAP.update((i.lower(), i) for i in PROD_LANGUAGES)
 SUPPORTED_NONLOCALES = ('media', 'admin')
 
 # Templates
-CSRF_FAILURE_VIEW = '%s.urls.handler_csrf' % ROOT_PACKAGE
+CSRF_FAILURE_VIEW = '%s.urls.handler_csrf' % os.path.basename(ROOT)
 
 TEMPLATE_CONTEXT_PROCESSORS = list(TEMPLATE_CONTEXT_PROCESSORS) + [
     # TODO: is this needed?
@@ -118,37 +118,46 @@ MINIFY_BUNDLES = {
 }
 JAVA_BIN = '/usr/bin/java'
 
-JINGO_EXCLUDE_APPS = ['debug_toolbar', 'admin']
+JINGO_EXCLUDE_APPS = ['debug_toolbar', 'admin', 'adminplus']
 
-MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES) + [
-    'input.middleware.MobileSiteMiddleware',
-    'commonware.response.middleware.GraphiteMiddleware',
-    'commonware.response.middleware.GraphiteRequestTimingMiddleware',
-]
+MIDDLEWARE_CLASSES = get_middleware(
+    append=(
+        'input.middleware.MobileSiteMiddleware',
+        'commonware.response.middleware.GraphiteMiddleware',
+        'commonware.response.middleware.GraphiteRequestTimingMiddleware',
+    )
+)
 
-INSTALLED_APPS = list(INSTALLED_APPS) + [
-    'common',  # comes first so it always takes precedence.
-    'input',  # comes first so it always takes precedence.
+INSTALLED_APPS = get_apps(
+    append=(
+        'common',  # comes first so it always takes precedence.
+        'input',  # comes first so it always takes precedence.
 
-    'api',
-    'feedback',
-    'myadmin',
-    'search',
-    'themes',
-    'website_issues',
+        'api',
+        'feedback',
+        'myadmin',
+        'search',
+        'themes',
+        'website_issues',
 
-    'annoying',
-    'cronjobs',
-    'haystack',  # for search
-    'celery_haystack',  # for lazy indexing
+        'commonware',
+        'annoying',
+        'cronjobs',
+        'haystack',  # for search
+        'celery_haystack',  # for lazy indexing
+        'adminplus',
 
-    'django.contrib.admin',
-    'django.contrib.sites',
-    'django.contrib.messages',
-]
-
-# Removed because this breaks the one user we have for admin.
-INSTALLED_APPS.remove('django_sha2')
+        'django.contrib.admin',
+        'django.contrib.sites',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+    ),
+    exclude=(
+        'django_sha2',
+        'django_browserid',
+        'compressor',
+    )
+)
 
 # Where to store product details
 PROD_DETAILS_DIR = path('lib/product_details_json')
@@ -218,3 +227,16 @@ HAYSTACK_CONNECTIONS = {
         'INDEX_NAME': 'input',
     },
 }
+
+STATIC_ROOT = 'static'
+STATIC_URL = '/static/'
+
+# Override this from funfactory.
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)

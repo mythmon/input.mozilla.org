@@ -4,6 +4,9 @@ from django.template import loader
 
 import jingo
 
+from funfactory.admin import SessionCsrfAdminSite
+from adminplus import AdminSitePlus
+
 
 def django_to_jinja(template_name, context, **kw):
     """
@@ -22,3 +25,8 @@ actions.render_to_response = django_to_jinja
 options.render_to_response = django_to_jinja
 sites.render_to_response = django_to_jinja
 auth_views.render_to_response = django_to_jinja
+
+
+class MyAdminSite(AdminSitePlus, SessionCsrfAdminSite):
+    """Combine AdminSitePlus and SessionCsrfAdminSite, to use them both."""
+    pass
