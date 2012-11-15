@@ -240,3 +240,7 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
 )
+
+# There isn't a funfactory helper for this.
+STATICFILES_FINDERS = tuple(finder for finder in STATICFILES_FINDERS
+    if finder not in ('compressor.finders.CompressorFinder',))

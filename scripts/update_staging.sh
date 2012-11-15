@@ -44,6 +44,8 @@ popd > /dev/null
         $PYTHON manage.py cron get_highcharts
         # Minify assets.
         $PYTHON manage.py compress_assets
+        mkdir -p $INPUT_DIR/static
+        /usr/bin/python26 $INPUT_DIR/manage.py collectstatic --noinput --clear
 #fi
 
 # Fix mobile and desktop site domains in database. Bug 608581.

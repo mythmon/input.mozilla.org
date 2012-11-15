@@ -40,6 +40,8 @@ cd $SYNC_DIR
 # Pull in highcharts.src.js - our lawyers make us do this.
 /usr/bin/python26 $INPUT_DIR/manage.py cron get_highcharts
 /usr/bin/python26 $INPUT_DIR/manage.py compress_assets
+mkdir -p $INPUT_DIR/static
+/usr/bin/python26 $INPUT_DIR/manage.py collectstatic --noinput --clear
 
 # FIXME: Commenting this out because it's not working.
 # if [ -d $SYNC_DIR/migrations/sites ]; then
