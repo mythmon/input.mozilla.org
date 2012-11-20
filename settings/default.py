@@ -146,6 +146,7 @@ INSTALLED_APPS = get_apps(
         'haystack',  # for search
         'celery_haystack',  # for lazy indexing
         'adminplus',
+        'jingo_minify',
 
         'django.contrib.admin',
         'django.contrib.sites',
