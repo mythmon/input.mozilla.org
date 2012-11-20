@@ -45,7 +45,9 @@ popd > /dev/null
         # Minify assets.
         $PYTHON manage.py compress_assets
         mkdir -p $INPUT_DIR/static
-        /usr/bin/python26 $INPUT_DIR/manage.py collectstatic --noinput --clear
+        $PYTHON manage.py collectstatic --noinput --clear
+        # Grab up to date product details
+        $PYTHON manage.py update_product_details
 #fi
 
 # Fix mobile and desktop site domains in database. Bug 608581.

@@ -42,6 +42,8 @@ cd $SYNC_DIR
 /usr/bin/python26 $INPUT_DIR/manage.py compress_assets
 mkdir -p $INPUT_DIR/static
 /usr/bin/python26 $INPUT_DIR/manage.py collectstatic --noinput --clear
+# Grab up to date product details
+/usr/bin/python26 $INPUT_DIR/manage.py update_product_details
 
 # FIXME: Commenting this out because it's not working.
 # if [ -d $SYNC_DIR/migrations/sites ]; then
@@ -57,4 +59,3 @@ mkdir -p $INPUT_DIR/static
 #/data/bin/omg_push_generic_live.sh .
 
 #/data/bin/issue-multi-command.py generic 'service httpd reload'
-
