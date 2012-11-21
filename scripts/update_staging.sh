@@ -45,7 +45,7 @@ popd > /dev/null
         # Minify assets.
         $PYTHON manage.py compress_assets
         #mkdir -p $INPUT_DIR/static
-        if [ -d $INPUT_DIR/static ]; then
+        if [ ! -d $INPUT_DIR/static ]; then
           echo "making static dir"
           mkdir -p $INPUT_DIR/static
         fi 
