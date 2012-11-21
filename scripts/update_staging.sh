@@ -7,7 +7,7 @@ HERE=`dirname $0`
 GIT=`which git`
 SVN=`which svn`
 PYTHON=`which python2.6`
-
+INPUT_DIR=/data/www/input.stage.mozilla.com/reporter
 pushd "$HERE/../" > /dev/null
 
 # update locales
@@ -44,7 +44,11 @@ popd > /dev/null
         $PYTHON manage.py cron get_highcharts
         # Minify assets.
         $PYTHON manage.py compress_assets
-        mkdir -p $INPUT_DIR/static
+        #mkdir -p $INPUT_DIR/static
+        if [ -d $INPUT_DIR/static ]; then
+          echo "making static dir"
+          mkdir -p $INPUT_DIR/static
+        fi 
         $PYTHON manage.py collectstatic --noinput --clear
         # Grab up to date product details
         $PYTHON manage.py update_product_details
