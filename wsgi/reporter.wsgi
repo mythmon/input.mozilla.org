@@ -3,6 +3,7 @@ import site
 from datetime import datetime
 
 os.environ["CELERY_LOADER"] = "django"
+os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 
 # Remember when mod_wsgi loaded this file so we can track it in nagios.
 wsgi_loaded = datetime.now()
