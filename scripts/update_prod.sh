@@ -3,59 +3,47 @@
 set -e
 
 SVN="/usr/bin/svn"
-INPUT_DIR="/data/input/python/input.mozilla.com/reporter"
+PYTHON="/usr/bin/python26"
+INPUT_DIR="/data/sync/input/src/django/input.mozilla.com/reporter"
 VENDOR_DIR="$INPUT_DIR/vendor"
-
-SYNC_DIR="/data/input/www/django/input.mozilla.com/reporter/"
 
 # update locales
 pushd locale > /dev/null
 $SVN revert -R .
-$SVN up
+#$SVN up
 ./compile-mo.sh .
 popd > /dev/null
 
+#update vendor
 echo -e "Updating vendor..."
 cd $VENDOR_DIR
 git pull
 git submodule sync
 git submodule update --init --recursive
 
+# update input.mozilla.org code in src tree
 echo -e "Updating reporter..."
 cd $INPUT_DIR
-git fetch origin
+git pull origin master 
 
-# Note: We're deploying from the master branch now to shave off some
-# workflow steps because this is a dead project. (willkg)
-git checkout origin/master
-git submodule update --init
+# sync to www tree, which web servers get, without .git* and .svn*
+/usr/bin/rsync -aq --exclude '.git*' --delete /data/sync/input/src/ /data/sync/input/www/
 
-cd /data/input;
-/usr/bin/rsync -aq --exclude '.git*' --delete /data/input/python/ /data/input/www/django
+# compress assets
+$PYTHON $INPUT_DIR/manage.py compress_assets
 
-cd $SYNC_DIR
-# FIXME: Commenting this out because it's not working.
-# /usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations
+# check if static dir exists, make if nto
+if [ ! -d $INPUT_DIR/static ]; then
+    echo "making static dir"
+    mkdir -p $INPUT_DIR/static
+fi
 
-# Pull in highcharts.src.js - our lawyers make us do this.
-/usr/bin/python26 $INPUT_DIR/manage.py cron get_highcharts
-/usr/bin/python26 $INPUT_DIR/manage.py compress_assets
-mkdir -p $INPUT_DIR/static
-/usr/bin/python26 $INPUT_DIR/manage.py collectstatic --noinput --clear
-# Grab up to date product details
-/usr/bin/python26 $INPUT_DIR/manage.py update_product_details
+# collect static assets to static/
+$PYTHON $INPUT_DIR/manage.py collectstatic --noinput --clear
 
-# FIXME: Commenting this out because it's not working.
-# if [ -d $SYNC_DIR/migrations/sites ]; then
-#   /usr/bin/python26 $VENDOR_DIR/src/schematic/schematic migrations/sites
-# fi
+# commit to git for web servers to pull from
+git commit -a -m "push to prod"
 
-# Clustering commented out because it takes too long during release.
-# If urgent, start by hand (in a screen). If not urgent, wait until clustering
-# cron job reoccurs.
-#su - apache -s /bin/sh -c '/usr/bin/python26 /data/input/www/django/input.mozilla.com/reporter/manage.py cron cluster'
-
-/data/input/deploy
-#/data/bin/omg_push_generic_live.sh .
-
-#/data/bin/issue-multi-command.py generic 'service httpd reload'
+issue-multi-command input /data/bin/libget/get-php5-www-git.sh
+sleep 60
+issue-multi-command input service httpd restart
