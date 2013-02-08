@@ -83,7 +83,7 @@ Make sure you create the database and user you've specified:
     mysql> GRANT ALL ON website_issues.* TO input@localhost IDENTIFIED BY 'input';
     mysql> GRANT ALL ON test_website_issues.* TO input@localhost IDENTIFIED BY 'input';
 
-DJANGO_SETTINGS_MODULE=settings To initialize the database, run:
+To initialize the database, run:
 
     $ ./manage.py syncdb
 
@@ -112,6 +112,8 @@ go get it using:
 
 For searching, we use [Sphinx][sphinx]. Set up an instance of it, and adjust
 the SPHINX\_\* settings in settings.py to match your setup.
+
+See docs/sphinxsearch.rst for more details.
 
 [sphinx]: http://www.sphinxsearch.com/
 
